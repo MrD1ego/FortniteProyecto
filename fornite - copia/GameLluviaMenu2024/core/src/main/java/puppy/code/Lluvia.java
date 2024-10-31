@@ -19,6 +19,8 @@ public class Lluvia {
     private Texture gotaBuenaNueva; // Nueva textura para gotas buenas a partir de 1000 puntos
     private Texture gotaEspecialNueva; // Nueva textura para gotas especiales a partir de 1000 puntos
     private Sound dropSound;
+    private Texture gotaLlama;
+    private Sound soundLlama;
     private Music rainMusic;
     private boolean texturasCambiadas = false; // Control para el cambio de texturas
     
@@ -27,7 +29,7 @@ public class Lluvia {
     private long intervaloGeneracionActual = 150000000; // Intervalo inicial más amplio entre gotas (150 ms)
     private long intervaloGeneracionOriginal = 100000000; // Intervalo original más rápido entre gotas (100 ms)
     
-    public Lluvia(Texture gotaBuena, Texture gotaMala, Texture gotaEspecial, Texture gotaBuenaNueva, Texture gotaEspecialNueva, Sound dropSound, Music rainMusic) {
+    public Lluvia(Texture gotaBuena, Texture gotaMala, Texture gotaEspecial, Texture gotaBuenaNueva, Texture gotaEspecialNueva, Texture gotaLlama, Sound soundLlama, Sound dropSound, Music rainMusic) {
         this.rainMusic = rainMusic;
         this.dropSound = dropSound;
         this.gotaBuena = gotaBuena;
@@ -35,6 +37,8 @@ public class Lluvia {
         this.gotaEspecial = gotaEspecial;
         this.gotaBuenaNueva = gotaBuenaNueva;
         this.gotaEspecialNueva = gotaEspecialNueva;
+        this.gotaLlama = gotaLlama;
+        this.soundLlama = soundLlama;
         
         // Establecer el volumen de la música al 40%
         this.rainMusic.setVolume(0.4f); // 0.4f representa el 40% del volumen máximo
@@ -78,7 +82,17 @@ public class Lluvia {
         gotas.add(nuevaGota);
         lastDropTime = TimeUtils.nanoTime();
     }
+    
+    private void crearGotaLlama() {
+        float x = MathUtils.random(0, 800 - 64);
+        float y = 480;
 
+        Gota nuevaGota = new GotaLlama(gotaLlama, soundLlama, x, y);
+        gotas.add(nuevaGota);
+    }
+    
+    private int ultimoPuntajeLlama = -1;
+    
     public boolean actualizarMovimiento(Tarro tarro) {
     // Cambiar texturas si el puntaje es 1000 o más
         if (tarro.getPuntos() >= 1000 && !texturasCambiadas) {
@@ -102,9 +116,16 @@ public class Lluvia {
         // Marcar que ya se han cambiado las texturas
             texturasCambiadas = true;
             
-            velocidadCaidaActual *= 2;
+            velocidadCaidaActual += 100;
         }
-
+        
+        
+  
+    if (tarro.getPuntos() >= 1000 && (tarro.getPuntos() / 1000) > ultimoPuntajeLlama) {
+        crearGotaLlama();
+        ultimoPuntajeLlama = tarro.getPuntos() / 1000; // Actualizar el último puntaje de creación
+    }
+    
     // Generar nuevas gotas de lluvia en función del intervalo de generación actual
         if (TimeUtils.nanoTime() - lastDropTime > intervaloGeneracionActual) {
             crearGotaDeLluvia();

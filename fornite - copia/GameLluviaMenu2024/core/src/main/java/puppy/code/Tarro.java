@@ -40,7 +40,7 @@ public class Tarro {
 			puntos+=pp;
 		}
 		
-	
+              
 	   public void crear() {
 		      bucket = new Rectangle();
 		      bucket.x = 800 / 2 - 64 / 2;
@@ -65,7 +65,9 @@ public class Tarro {
 		 }
 	   } 
 	   
-	   
+	   public void aumentarVida() {
+           vidas++; // Incrementa la vida
+           }
 	   public void actualizarMovimiento() { 
 		   // movimiento desde mouse/touch
 		   /*if(Gdx.input.isTouched()) {
