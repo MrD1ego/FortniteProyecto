@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class Lluvia {
-    private Array<Gota> gotas; // Cambiado para usar objetos de tipo Gota
+    private Array<IGota> gotas; // Cambiado para usar objetos de tipo IGota
     private long lastDropTime;
     private Texture gotaBuena;
     private Texture gotaMala;
@@ -22,14 +22,17 @@ public class Lluvia {
     private Texture gotaLlama;
     private Sound soundLlama;
     private Music rainMusic;
+
+    private Texture gotaJetpack;
+    private Sound jetpackSound;
     private boolean texturasCambiadas = false; // Control para el cambio de texturas
-    
+
     // Variables de velocidad y tiempo de generación
     private float velocidadCaidaActual = 150; // Velocidad reducida
     private long intervaloGeneracionActual = 150000000; // Intervalo inicial más amplio entre gotas (150 ms)
     private long intervaloGeneracionOriginal = 100000000; // Intervalo original más rápido entre gotas (100 ms)
-    
-    public Lluvia(Texture gotaBuena, Texture gotaMala, Texture gotaEspecial, Texture gotaBuenaNueva, Texture gotaEspecialNueva, Texture gotaLlama, Sound soundLlama, Sound dropSound, Music rainMusic) {
+
+    public Lluvia(Texture gotaBuena, Texture gotaMala, Texture gotaEspecial, Texture gotaBuenaNueva, Texture gotaEspecialNueva, Texture gotaLlama, Texture gotaJetpack, Sound jetpackSound, Sound soundLlama, Sound dropSound, Music rainMusic) {
         this.rainMusic = rainMusic;
         this.dropSound = dropSound;
         this.gotaBuena = gotaBuena;
@@ -39,20 +42,22 @@ public class Lluvia {
         this.gotaEspecialNueva = gotaEspecialNueva;
         this.gotaLlama = gotaLlama;
         this.soundLlama = soundLlama;
-        
+
+        this.gotaJetpack = gotaJetpack;
+        this.jetpackSound = jetpackSound;
+
         // Establecer el volumen de la música al 40%
         this.rainMusic.setVolume(0.4f); // 0.4f representa el 40% del volumen máximo
     }
-    
-    
+
     public void cambiarGotaMala(Texture nuevaTextura) {
-    this.gotaMala = nuevaTextura; // Actualiza la textura de la gota mala
-    for (Gota gota : gotas) {
-        if (gota instanceof GotaMala) {
-            gota.textura.dispose(); // Liberar la textura anterior
-            gota.textura = nuevaTextura; // Cambiar a la nueva textura
+        this.gotaMala = nuevaTextura; // Actualiza la textura de la gota mala
+        for (IGota gota : gotas) { // Cambiado a IGota
+            if (gota instanceof GotaMala) {
+                gota.getTextura().dispose(); // Liberar la textura anterior
+                ((GotaMala) gota).setTextura(nuevaTextura); // Cambiar a la nueva textura
+            }
         }
-    }
     }
 
     public void crear() {
@@ -61,7 +66,6 @@ public class Lluvia {
         rainMusic.setLooping(true);
         rainMusic.play();
     }
-    
 
     private void crearGotaDeLluvia() {
         float x = MathUtils.random(0, 800 - 64);
@@ -69,43 +73,46 @@ public class Lluvia {
 
         // Determinar el tipo de gota
         int tipoGota = MathUtils.random(1, 100);
-        Gota nuevaGota;
+        IGota nuevaGota; // Cambiado a IGota
 
-        if (tipoGota <= 45) { // 45% de probabilidad para gotas buenas (normales)
+
+        if (tipoGota <= 2) { // 2% de probabilidad para la gota Jetpack
+            nuevaGota = new GotaJetpack(gotaJetpack, jetpackSound, x, y);
+        } else if (tipoGota <= 47) { // 45% de probabilidad para gotas buenas (normales)
             nuevaGota = new GotaBuena(gotaBuena, dropSound, x, y);
-        } else if (tipoGota <= 85) { // 40% de probabilidad para gotas malas
+        } else if (tipoGota <= 87) { // 40% de probabilidad para gotas malas
             nuevaGota = new GotaMala(gotaMala, x, y);
-        } else { // 15% de probabilidad para gotas especiales
+        } else { // 10% de probabilidad para gotas especiales
             nuevaGota = new GotaEspecial(gotaEspecial, dropSound, x, y);
         }
 
         gotas.add(nuevaGota);
         lastDropTime = TimeUtils.nanoTime();
     }
-    
+
     private void crearGotaLlama() {
         float x = MathUtils.random(0, 800 - 64);
         float y = 480;
 
-        Gota nuevaGota = new GotaLlama(gotaLlama, soundLlama, x, y);
+        IGota nuevaGota = new GotaLlama(gotaLlama, soundLlama, x, y);
         gotas.add(nuevaGota);
     }
-    
+
     private int ultimoPuntajeLlama = -1;
-    
+
     public boolean actualizarMovimiento(Tarro tarro) {
-    // Cambiar texturas si el puntaje es 1000 o más
+        // Cambiar texturas si el puntaje es 1000 o más
         if (tarro.getPuntos() >= 1000 && !texturasCambiadas) {
-        // Liberar las texturas anteriores
+            // Liberar las texturas anteriores
             gotaBuena.dispose();
             gotaEspecial.dispose();
 
-        // Cambiar a las nuevas texturas
+            // Cambiar a las nuevas texturas
             gotaBuena = gotaBuenaNueva;
             gotaEspecial = gotaEspecialNueva;
 
-        // Actualizar texturas de las gotas que ya están en pantalla
-            for (Gota gota : gotas) {
+            // Actualizar texturas de las gotas que ya están en pantalla
+            for (IGota gota : gotas) { // Cambiado a IGota
                 if (gota instanceof GotaBuena) {
                     ((GotaBuena) gota).actualizarTextura(gotaBuena);
                 } else if (gota instanceof GotaEspecial) {
@@ -113,48 +120,45 @@ public class Lluvia {
                 }
             }
 
-        // Marcar que ya se han cambiado las texturas
+            // Marcar que ya se han cambiado las texturas
             texturasCambiadas = true;
-            
+
             velocidadCaidaActual += 100;
         }
-        
-        
-  
-    if (tarro.getPuntos() >= 1000 && (tarro.getPuntos() / 1000) > ultimoPuntajeLlama) {
-        crearGotaLlama();
-        ultimoPuntajeLlama = tarro.getPuntos() / 1000; // Actualizar el último puntaje de creación
-    }
-    
-    // Generar nuevas gotas de lluvia en función del intervalo de generación actual
+
+        if (tarro.getPuntos() >= 1000 && (tarro.getPuntos() / 1000) > ultimoPuntajeLlama) {
+            crearGotaLlama();
+            ultimoPuntajeLlama = tarro.getPuntos() / 1000; // Actualizar el último puntaje de creación
+        }
+
+        // Generar nuevas gotas de lluvia en función del intervalo de generación actual
         if (TimeUtils.nanoTime() - lastDropTime > intervaloGeneracionActual) {
             crearGotaDeLluvia();
         }
 
-    // Verificar si las gotas cayeron o chocaron con el tarro
+        // Verificar si las gotas cayeron o chocaron con el tarro
         for (int i = 0; i < gotas.size; i++) {
-            Gota gota = gotas.get(i);
+            IGota gota = gotas.get(i); // Cambiado a IGota
             gota.actualizarPosicion(Gdx.graphics.getDeltaTime(), velocidadCaidaActual);
 
-        // Si cae al suelo, eliminarla
+            // Si cae al suelo, eliminarla
             if (gota.getHitbox().y + 64 < 0) {
                 gotas.removeIndex(i);
                 continue;
             }
 
-        // Verificar colisión con el tarro
+            // Verificar colisión con el tarro
             if (gota.getHitbox().overlaps(tarro.getArea())) {
                 gota.aplicarEfecto(tarro);
                 gotas.removeIndex(i);
             }
-        } 
+        }
 
         return tarro.getVidas() > 0; // Retornar si el juego sigue activo
     }
 
-   
-    public void actualizarDibujoLluvia(SpriteBatch batch) { 
-        for (Gota gota : gotas) {
+    public void actualizarDibujoLluvia(SpriteBatch batch) {
+        for (IGota gota : gotas) { // Cambiado a IGota
             batch.draw(gota.getTextura(), gota.getHitbox().x, gota.getHitbox().y);
         }
     }
@@ -168,7 +172,7 @@ public class Lluvia {
         gotaEspecial.dispose();
         gotaBuenaNueva.dispose();
         gotaEspecialNueva.dispose();
-        for (Gota gota : gotas) {
+        for (IGota gota : gotas) { // Cambiado a IGota
             gota.getTextura().dispose(); // Descartar las texturas de las gotas
         }
     }
@@ -187,3 +191,4 @@ public class Lluvia {
         }
     }
 }
+

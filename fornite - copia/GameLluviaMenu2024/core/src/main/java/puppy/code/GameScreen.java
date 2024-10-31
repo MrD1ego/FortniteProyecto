@@ -50,8 +50,11 @@ public class GameScreen implements Screen {
         
         Texture gotaLlama = new Texture(Gdx.files.internal("llama.png")); // Nueva textura para la gota especial después de 1000 puntos
         Sound soundLlama = Gdx.audio.newSound(Gdx.files.internal("soundLlama.mp3"));
+        
+        Texture gotaJetpack = new Texture(Gdx.files.internal("jetpack.png"));
+        Sound jetpackSound = Gdx.audio.newSound(Gdx.files.internal("jetpackSound.mp3"));
         // Inicializar la clase Lluvia con las texturas de gotas
-        lluvia = new Lluvia(gota, gotaMala, gotaEspecial, gotaBuenaNueva, gotaEspecialNueva, gotaLlama, soundLlama, dropSound, rainMusic);
+        lluvia = new Lluvia(gota, gotaMala, gotaEspecial, gotaBuenaNueva, gotaEspecialNueva, gotaLlama, gotaJetpack, jetpackSound, soundLlama, dropSound, rainMusic);
         
         // Configuración de la cámara
         camera = new OrthographicCamera();

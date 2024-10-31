@@ -16,5 +16,9 @@ public class GotaMala extends Gota {
     public void aplicarEfecto(Tarro tarro) {
         tarro.dañar();
     }
+    
+    public void setTextura(Texture nuevaTextura) {
+        this.textura = nuevaTextura;
+    }
 }
 
