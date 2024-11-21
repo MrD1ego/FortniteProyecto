@@ -17,6 +17,7 @@ public abstract class Gota implements IGota {
         this.hitbox = new Rectangle(x, y, 64, 64);
     }
 
+<<<<<<< HEAD
     // Método plantilla (Template Method)
     public final void ejecutar(Tarro tarro, float deltaTime, float velocidad) {
         actualizarPosicion(deltaTime, velocidad); // Paso 1: Actualizar posición
@@ -30,6 +31,10 @@ public abstract class Gota implements IGota {
     public void actualizarPosicion(float deltaTime, float velocidad) {
         hitbox.y -= velocidad * deltaTime;
     }
+=======
+    @Override
+    public abstract void aplicarEfecto(Tarro tarro);
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
 
     @Override
     public Rectangle getHitbox() {
@@ -41,6 +46,7 @@ public abstract class Gota implements IGota {
         return textura;
     }
 
+<<<<<<< HEAD
     // Verificación común de colisión
     protected boolean verificarColision(Tarro tarro) {
         return hitbox.overlaps(tarro.getArea());
@@ -50,3 +56,10 @@ public abstract class Gota implements IGota {
     @Override
     public abstract void aplicarEfecto(Tarro tarro);
 }
+=======
+    @Override
+    public void actualizarPosicion(float deltaTime, float velocidad) {
+        hitbox.y -= velocidad * deltaTime;
+    }
+}
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e

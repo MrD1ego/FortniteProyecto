@@ -7,6 +7,7 @@ package puppy.code;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GotaMala extends Gota {
+<<<<<<< HEAD
     private float dx = 0; // Dirección en x, por defecto hacia abajo
     private float dy = -1; // Dirección en y, por defecto hacia abajo
     private boolean reducido = false;
@@ -29,12 +30,18 @@ public class GotaMala extends Gota {
     public void actualizarPosicion(float deltaTime, float velocidad) {
         hitbox.x += dx * velocidad * deltaTime;
         hitbox.y += dy * velocidad * deltaTime;
+=======
+    public GotaMala(Texture textura, float x, float y) {
+        super(textura, x, y);
+        this.tipo = 1; // Gota mala
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
     }
 
     @Override
     public void aplicarEfecto(Tarro tarro) {
         tarro.dañar();
     }
+<<<<<<< HEAD
 
     public void setTextura(Texture nuevaTextura) {
         this.textura = nuevaTextura;
@@ -57,3 +64,11 @@ public class GotaMala extends Gota {
 
 
 
+=======
+    
+    public void setTextura(Texture nuevaTextura) {
+        this.textura = nuevaTextura;
+    }
+}
+
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e

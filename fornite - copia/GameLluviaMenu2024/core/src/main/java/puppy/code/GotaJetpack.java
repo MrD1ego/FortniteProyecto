@@ -17,6 +17,7 @@ public class GotaJetpack extends Gota {
         this.tiempoRestante = 0;
     }
 
+<<<<<<< HEAD
     @Override
     public void aplicarEfecto(Tarro tarro) {
         if (!activada) {
@@ -32,6 +33,25 @@ public class GotaJetpack extends Gota {
             tiempoRestante -= delta;
             if (tiempoRestante <= 0) {
                 activada = false;
+=======
+
+    @Override
+    public void aplicarEfecto(Tarro tarro) {
+        if (!activada) {
+            soundJetpack.play(); // Reproducir sonido
+            activada = true;
+            tiempoRestante = tiempoActivacion; // Reiniciar el tiempo restante
+            tarro.activarJetpack(); // Activar el efecto jetpack en el tarro
+        }
+    }
+
+
+    public void actualizar(float delta) {
+        if (activada) {
+            tiempoRestante -= delta; // Reducir el tiempo restante
+            if (tiempoRestante <= 0) {
+                activada = false; // Desactivar el efecto
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
             }
         }
     }

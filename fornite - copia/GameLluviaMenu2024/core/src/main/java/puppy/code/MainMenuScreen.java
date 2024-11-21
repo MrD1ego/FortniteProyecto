@@ -16,11 +16,19 @@ public class MainMenuScreen implements Screen {
 	private OrthographicCamera camera;
 
 	public MainMenuScreen(final GameLluviaMenu game) {
+<<<<<<< HEAD
             this.game = game;
             this.batch = game.getBatch();
             this.font = game.getFont();
             camera = new OrthographicCamera();
             camera.setToOrtho(false, 800, 480);
+=======
+		this.game = game;
+        this.batch = game.getBatch();
+        this.font = game.getFont();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480);
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
 	}
 
 	@Override
