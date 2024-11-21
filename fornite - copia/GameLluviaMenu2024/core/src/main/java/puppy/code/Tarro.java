@@ -1,15 +1,5 @@
 package puppy.code;
 
-<<<<<<< HEAD
-
-
-=======
-<<<<<<< HEAD
-
-
-=======
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
@@ -17,33 +7,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-<<<<<<< HEAD
 import com.badlogic.gdx.utils.Array;
-=======
-<<<<<<< HEAD
-import com.badlogic.gdx.utils.Array;
-=======
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class Tarro {
     private Rectangle bucket;
     private Texture bucketImage;
     private Sound sonidoHerido;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     private Texture texturaBala;
     private Array<Bala> balas;
     private long tiempoUltimoDisparo = 0;
     private final long INTERVALO_DISPARO = 200000000L; // 5 disparos por segundo
-<<<<<<< HEAD
-=======
-=======
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     private int vidas = 3;
     private int puntos = 0;
     private int velx = 400;
@@ -51,10 +25,6 @@ public class Tarro {
     private int tiempoHeridoMax = 50;
     private int tiempoHerido;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     private boolean jefeActivo = false; // Variable para controlar si el jefe está activo
 
     // Variables para el efecto Jetpack
@@ -70,20 +40,6 @@ public class Tarro {
         sonidoHerido = ss;
         this.texturaBala = texturaBala;
         this.balas = new Array<>();
-<<<<<<< HEAD
-=======
-=======
-    // Variables para el efecto Jetpack
-    private boolean jetpackActivo = false;
-    private float posicionYOriginal;
-    private long tiempoInicioJetpack;
-    private final long DURACION_JETPACK = 10000000000L; // 10 segundos en nanosegundos
-
-    public Tarro(Texture tex, Sound ss) {
-        bucketImage = tex;
-        sonidoHerido = ss;
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     }
 
     public int getVidas() {
@@ -108,16 +64,8 @@ public class Tarro {
         bucket.y = 20;
         bucket.width = 64;
         bucket.height = 64;
-<<<<<<< HEAD
         bucket.width = anchoOriginal;
         bucket.height = altoOriginal;
-=======
-<<<<<<< HEAD
-        bucket.width = anchoOriginal;
-        bucket.height = altoOriginal;
-=======
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     }
 
     public void dañar() {
@@ -129,29 +77,13 @@ public class Tarro {
 
     public void dibujar(SpriteBatch batch) {
         if (!herido) {
-<<<<<<< HEAD
             batch.draw(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
         } else {
             batch.draw(bucketImage, bucket.x, bucket.y + MathUtils.random(-5, 5), bucket.width, bucket.height);
-=======
-<<<<<<< HEAD
-            batch.draw(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
-        } else {
-            batch.draw(bucketImage, bucket.x, bucket.y + MathUtils.random(-5, 5), bucket.width, bucket.height);
-=======
-            batch.draw(bucketImage, bucket.x, bucket.y);
-        } else {
-            batch.draw(bucketImage, bucket.x, bucket.y + MathUtils.random(-5, 5));
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
             tiempoHerido--;
             if (tiempoHerido <= 0) herido = false;
         }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         if (jetpackActivo) {
             batch.setColor(1, 1, 1, 0.5f);
             batch.draw(bucketImage, bucket.x, posicionYOriginal, bucket.width, bucket.height);
@@ -160,16 +92,6 @@ public class Tarro {
 
         for (Bala bala : balas) {
             bala.dibujar(batch);
-<<<<<<< HEAD
-=======
-=======
-        // Dibuja la imagen residual si el jetpack está activo
-        if (jetpackActivo) {
-            batch.setColor(1, 1, 1, 0.5f); // Cambia el color a blanco con 50% de transparencia
-            batch.draw(bucketImage, bucket.x, posicionYOriginal); // Dibuja la imagen original en la posición original
-            batch.setColor(1, 1, 1, 1); // Restablece el color a opaco
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         }
     }
 
@@ -177,51 +99,22 @@ public class Tarro {
         vidas++;
     }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     public void activarJetpack() {
         if (!jetpackActivo) {
             jetpackActivo = true;
             posicionYOriginal = this.bucket.y;
-<<<<<<< HEAD
-=======
-=======
-    // Método para activar el efecto Jetpack
-    public void activarJetpack() {
-        if (!jetpackActivo) { // Solo activar si no está ya en uso
-            jetpackActivo = true;
-            posicionYOriginal = this.bucket.y; // Guarda la posición actual en Y
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
             tiempoInicioJetpack = TimeUtils.nanoTime();
         }
     }
 
     public void actualizarMovimiento() {
         if (jetpackActivo) {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-            // Permitir movimiento en ambos ejes durante el efecto Jetpack
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 bucket.y += velx * Gdx.graphics.getDeltaTime();
             }
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 bucket.y -= velx * Gdx.graphics.getDeltaTime();
             }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-
-            // Movimiento horizontal
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
                 bucket.x -= velx * Gdx.graphics.getDeltaTime();
             }
@@ -229,27 +122,11 @@ public class Tarro {
                 bucket.x += velx * Gdx.graphics.getDeltaTime();
             }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
             if (TimeUtils.nanoTime() - tiempoInicioJetpack > DURACION_JETPACK) {
                 jetpackActivo = false;
                 bucket.y = posicionYOriginal;
             }
         } else {
-<<<<<<< HEAD
-=======
-=======
-            // Revisar si han pasado 10 segundos desde que se activó
-            if (TimeUtils.nanoTime() - tiempoInicioJetpack > DURACION_JETPACK) {
-                jetpackActivo = false;
-                bucket.y = posicionYOriginal; // Restaurar la posición original en Y
-            }
-        } else {
-            // Movimiento normal en X (izquierda y derecha)
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
                 bucket.x -= velx * Gdx.graphics.getDeltaTime();
             }
@@ -258,10 +135,6 @@ public class Tarro {
             }
         }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         if (bucket.x < 0) bucket.x = 0;
         if (bucket.x > 800 - 64) bucket.x = 800 - 64;
         if (bucket.y < 0) bucket.y = 0;
@@ -273,17 +146,6 @@ public class Tarro {
                 balas.removeValue(bala, true);
             }
         }
-<<<<<<< HEAD
-=======
-=======
-        // Limitar el tarro dentro de los bordes de la pantalla
-        if (bucket.x < 0) bucket.x = 0;
-        if (bucket.x > 800 - 64) bucket.x = 800 - 64;
-        
-        if (bucket.y < 0) bucket.y = 0;
-        if (bucket.y > 480 - 64) bucket.y = 480 - 64;
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     }
 
     public void destruir() {
@@ -293,10 +155,6 @@ public class Tarro {
     public boolean estaHerido() {
         return herido;
     }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
 
     public void reducirTamano() {
         bucket.width *= 0.4;
@@ -324,9 +182,4 @@ public class Tarro {
         bucket.height = altoOriginal;
     }
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
->>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
 }
