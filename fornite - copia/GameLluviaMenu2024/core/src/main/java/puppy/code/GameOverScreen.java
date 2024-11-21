@@ -14,11 +14,11 @@ public class GameOverScreen implements Screen {
 	private OrthographicCamera camera;
 
 	public GameOverScreen(final GameLluviaMenu game) {
-            this.game = game;
-            this.batch = game.getBatch();
-            this.font = game.getFont();
-            camera = new OrthographicCamera();
-            camera.setToOrtho(false, 800, 480);
+		this.game = game;
+        this.batch = game.getBatch();
+        this.font = game.getFont();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480);
 	}
 
 	@Override

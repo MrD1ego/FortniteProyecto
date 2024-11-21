@@ -17,21 +17,23 @@ public class GotaJetpack extends Gota {
         this.tiempoRestante = 0;
     }
 
+
     @Override
     public void aplicarEfecto(Tarro tarro) {
         if (!activada) {
-            soundJetpack.play();
+            soundJetpack.play(); // Reproducir sonido
             activada = true;
-            tiempoRestante = tiempoActivacion;
-            tarro.activarJetpack();
+            tiempoRestante = tiempoActivacion; // Reiniciar el tiempo restante
+            tarro.activarJetpack(); // Activar el efecto jetpack en el tarro
         }
     }
 
+
     public void actualizar(float delta) {
         if (activada) {
-            tiempoRestante -= delta;
+            tiempoRestante -= delta; // Reducir el tiempo restante
             if (tiempoRestante <= 0) {
-                activada = false;
+                activada = false; // Desactivar el efecto
             }
         }
     }

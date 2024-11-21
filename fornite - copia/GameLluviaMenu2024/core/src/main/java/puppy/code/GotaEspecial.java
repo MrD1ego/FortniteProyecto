@@ -4,29 +4,28 @@
  */
 package puppy.code;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Sound;
 
-public class GotaBuena extends Gota {
+public class GotaEspecial extends Gota {
     private Sound dropSound;
 
-    public GotaBuena(Texture textura, Sound dropSound, float x, float y) {
+    public GotaEspecial(Texture textura, Sound dropSound, float x, float y) {
         super(textura, x, y);
-        this.tipo = 2; // Gota buena
+        this.tipo = 3; // Gota especial
         this.dropSound = dropSound;
     }
 
     @Override
     public void aplicarEfecto(Tarro tarro) {
-        tarro.sumarPuntos(10);
+        tarro.sumarPuntos(50);
         dropSound.play(0.4f);
     }
 
-    // Método adicional para actualizar textura
+    // Método para actualizar la textura
     public void actualizarTextura(Texture nuevaTextura) {
         this.textura = nuevaTextura;
     }
 }
-
 
 

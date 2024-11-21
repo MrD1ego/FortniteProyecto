@@ -18,12 +18,12 @@ public class PausaScreen implements Screen {
 	private OrthographicCamera camera;
 
 	public PausaScreen (final GameLluviaMenu game, GameScreen juego) {
-            this.game = game;
-            this.juego = juego;
-            this.batch = game.getBatch();
-            this.font = game.getFont();
-            camera = new OrthographicCamera();
-            camera.setToOrtho(false, 800, 480);
+		this.game = game;
+        this.juego = juego;
+        this.batch = game.getBatch();
+        this.font = game.getFont();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 800, 480);
 	}
 
 	@Override

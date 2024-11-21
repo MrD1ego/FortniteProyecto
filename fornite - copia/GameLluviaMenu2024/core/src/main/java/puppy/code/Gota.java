@@ -17,19 +17,8 @@ public abstract class Gota implements IGota {
         this.hitbox = new Rectangle(x, y, 64, 64);
     }
 
-    // Método plantilla (Template Method)
-    public final void ejecutar(Tarro tarro, float deltaTime, float velocidad) {
-        actualizarPosicion(deltaTime, velocidad); // Paso 1: Actualizar posición
-        if (verificarColision(tarro)) { // Paso 2: Verificar colisión con el tarro
-            aplicarEfecto(tarro); // Paso 3: Aplicar efecto específico
-        }
-    }
-
-    // Métodos concretos
     @Override
-    public void actualizarPosicion(float deltaTime, float velocidad) {
-        hitbox.y -= velocidad * deltaTime;
-    }
+    public abstract void aplicarEfecto(Tarro tarro);
 
     @Override
     public Rectangle getHitbox() {
@@ -41,12 +30,8 @@ public abstract class Gota implements IGota {
         return textura;
     }
 
-    // Verificación común de colisión
-    protected boolean verificarColision(Tarro tarro) {
-        return hitbox.overlaps(tarro.getArea());
-    }
-
-    // Método abstracto para definir el efecto de cada gota
     @Override
-    public abstract void aplicarEfecto(Tarro tarro);
+    public void actualizarPosicion(float deltaTime, float velocidad) {
+        hitbox.y -= velocidad * deltaTime;
+    }
 }

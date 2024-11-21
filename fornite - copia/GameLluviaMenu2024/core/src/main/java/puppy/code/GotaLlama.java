@@ -13,7 +13,7 @@ public class GotaLlama extends Gota {
 
     @Override
     public void aplicarEfecto(Tarro tarro) {
-        tarro.aumentarVida();
-        soundLlama.play();
+        tarro.aumentarVida(); // Aumentar vida
+        soundLlama.play(); // Reproducir sonido
     }
 }
