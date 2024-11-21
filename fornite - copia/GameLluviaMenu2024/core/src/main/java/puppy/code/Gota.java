@@ -17,6 +17,10 @@ public abstract class Gota implements IGota {
         this.hitbox = new Rectangle(x, y, 64, 64);
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     // Método plantilla (Template Method)
     public final void ejecutar(Tarro tarro, float deltaTime, float velocidad) {
         actualizarPosicion(deltaTime, velocidad); // Paso 1: Actualizar posición
@@ -25,11 +29,16 @@ public abstract class Gota implements IGota {
         }
     }
 
+<<<<<<< HEAD
     // Método concreto para actualizar posición
+=======
+    // Métodos concretos
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     @Override
     public void actualizarPosicion(float deltaTime, float velocidad) {
         hitbox.y -= velocidad * deltaTime;
     }
+<<<<<<< HEAD
 
     // Método común para verificar colisión
     protected boolean verificarColision(Tarro tarro) {
@@ -41,6 +50,13 @@ public abstract class Gota implements IGota {
     public abstract void aplicarEfecto(Tarro tarro);
 
     // Getters
+=======
+=======
+    @Override
+    public abstract void aplicarEfecto(Tarro tarro);
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
+
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     @Override
     public Rectangle getHitbox() {
         return hitbox;
@@ -50,6 +66,27 @@ public abstract class Gota implements IGota {
     public Texture getTextura() {
         return textura;
     }
+<<<<<<< HEAD
 }
 
 
+=======
+
+<<<<<<< HEAD
+    // Verificación común de colisión
+    protected boolean verificarColision(Tarro tarro) {
+        return hitbox.overlaps(tarro.getArea());
+    }
+
+    // Método abstracto para definir el efecto de cada gota
+    @Override
+    public abstract void aplicarEfecto(Tarro tarro);
+}
+=======
+    @Override
+    public void actualizarPosicion(float deltaTime, float velocidad) {
+        hitbox.y -= velocidad * deltaTime;
+    }
+}
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753

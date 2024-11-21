@@ -23,10 +23,19 @@ public class GameScreen implements Screen {
     private Texture gotaMala2; // Nueva textura para la gota mala después de 1000 puntos
     private Texture gotaLlama;
     private Sound soundLlama;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     private Texture tomate;
     private Texture Bala;
     
     
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
     
     private boolean fondoCambiado = false;
 
@@ -41,6 +50,13 @@ public class GameScreen implements Screen {
 
         // Cargar las texturas para el tarro y las gotas
         Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+        tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")), hurtSound);
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         
         Texture gota = new Texture(Gdx.files.internal("drop.png"));
         Texture gotaMala = new Texture(Gdx.files.internal("dropBad.png"));
@@ -50,21 +66,41 @@ public class GameScreen implements Screen {
         Texture gotaEspecialNueva = new Texture(Gdx.files.internal("specialDropNew.png")); // Nueva textura para la gota especial después de 1000 puntos
         Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
         Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
+<<<<<<< HEAD
         Texture bala = new Texture(Gdx.files.internal("Bala.png"));
         
         tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")), hurtSound, bala);
+=======
+<<<<<<< HEAD
+        Texture bala = new Texture(Gdx.files.internal("Bala.png"));
+        
+        tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")), hurtSound, bala);
+=======
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         
         Texture gotaLlama = new Texture(Gdx.files.internal("llama.png")); // Nueva textura para la gota especial después de 1000 puntos
         Sound soundLlama = Gdx.audio.newSound(Gdx.files.internal("soundLlama.mp3"));
         
         Texture gotaJetpack = new Texture(Gdx.files.internal("jetpack.png"));
         Sound jetpackSound = Gdx.audio.newSound(Gdx.files.internal("jetpackSound.mp3"));
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         
         
         Texture tomate = new Texture(Gdx.files.internal("Tomate.png"));
         Music jefeMusic = Gdx.audio.newMusic(Gdx.files.internal("jefe.mp3"));
         // Inicializar la clase Lluvia con las texturas de gotas
         lluvia = new Lluvia(gota, gotaMala, gotaEspecial, gotaBuenaNueva, gotaEspecialNueva, gotaLlama, gotaJetpack, jetpackSound, soundLlama, dropSound, rainMusic, tomate, jefeMusic);
+<<<<<<< HEAD
+=======
+=======
+        // Inicializar la clase Lluvia con las texturas de gotas
+        lluvia = new Lluvia(gota, gotaMala, gotaEspecial, gotaBuenaNueva, gotaEspecialNueva, gotaLlama, gotaJetpack, jetpackSound, soundLlama, dropSound, rainMusic);
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         
         // Configuración de la cámara
         camera = new OrthographicCamera();
@@ -98,7 +134,14 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(0, 0, 0, 1);
         camera.update();
         batch.setProjectionMatrix(camera.combined);
+<<<<<<< HEAD
         
+=======
+<<<<<<< HEAD
+        
+=======
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         batch.begin();
 
         // Dibujar el fondo y demás elementos de juego
@@ -106,11 +149,21 @@ public class GameScreen implements Screen {
         font.draw(batch, "Puntos totales: " + tarro.getPuntos(), 5, 475);
         font.draw(batch, "Vidas : " + tarro.getVidas(), 670, 475);
         font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth / 2 - 50, 475);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         
         if (lluvia.isJefeActivo()) {
             int vidaTomate = lluvia.getTomate().getVida();
             font.draw(batch, "Vida: " + vidaTomate, 20, 450); // Posición de texto de vida del jefe
         }
+<<<<<<< HEAD
+=======
+=======
+    
+>>>>>>> b6da7ac1292ed6e54357a3894fd4e87d7bb9165e
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
         // Dibujar los elementos del juego
         if (!tarro.estaHerido()) {
             tarro.actualizarMovimiento();
@@ -161,4 +214,8 @@ public class GameScreen implements Screen {
         background2.dispose(); // Liberar el segundo fondo
         gotaMala2.dispose(); // Liberar la nueva textura de la gota mala
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1c34354e13680c6da4057ccab0ad775e4ffa4753
