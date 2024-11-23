@@ -4,81 +4,160 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
-
 
 public class PausaScreen implements Screen {
 
-	private final GameLluviaMenu game;
-	private GameScreen juego;
-	private SpriteBatch batch;	   
-	private BitmapFont font;
-	private OrthographicCamera camera;
+    private final GameLluviaMenu game;
+    private final GameScreen juego;
+    private final SpriteBatch batch;
+    private OrthographicCamera camera;
 
-	public PausaScreen (final GameLluviaMenu game, GameScreen juego) {
-            this.game = game;
-            this.juego = juego;
-            this.batch = game.getBatch();
-            this.font = game.getFont();
-            camera = new OrthographicCamera();
-            camera.setToOrtho(false, 800, 480);
-	}
+    // Texturas y áreas
+    private Texture pausaImagen;
+    private Texture botonVolver;
+    private Texture botonContinuar;
+    private Rectangle botonVolverArea;
+    private Rectangle botonContinuarArea;
 
-	@Override
-        public void render(float delta) {
-            ScreenUtils.clear(0, 0, 1.0f, 0.5f);
+    // Ratios para escalado
+    private static final float BUTTON_WIDTH_RATIO = 0.4f; // 40% del ancho de la pantalla
+    private static final float BUTTON_HEIGHT_RATIO = 0.1f; // 10% del alto de la pantalla
 
-            camera.update();
-            batch.setProjectionMatrix(camera.combined);
+    public PausaScreen(final GameLluviaMenu game, GameScreen juego) {
+        this.game = game;
+        this.juego = juego;
+        this.batch = game.getBatch();
 
-            batch.begin();
-            font.draw(batch, "Juego en Pausa ", 100, 150);
-            font.draw(batch, "Toca en cualquier lado para continuar o presiona ESC/P", 100, 100);
-            batch.end();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 800, 480);
 
-         // Reanudar el juego al tocar o presionar ESC o P
-        if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            game.setScreen(juego);
-            dispose();
+        // Cargar texturas
+        pausaImagen = new Texture("Pausa.png");
+        botonVolver = new Texture("Volver.png");
+        botonContinuar = new Texture("Continuar.png");
+
+        // Inicializar áreas de botones
+        actualizarBotonHitbox();
+    }
+
+    private void actualizarBotonHitbox() {
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        // Tamaño y posición del botón "Volver al menú"
+        float buttonWidth = screenWidth * BUTTON_WIDTH_RATIO;
+        float buttonHeight = screenHeight * BUTTON_HEIGHT_RATIO;
+        float buttonX = (screenWidth - buttonWidth) / 2;
+        float volverButtonY = screenHeight * 0.4f;
+
+        botonVolverArea = new Rectangle(buttonX, volverButtonY, buttonWidth, buttonHeight);
+
+        // Tamaño y posición del botón "Continuar"
+        float continuarButtonY = screenHeight * 0.2f;
+
+        botonContinuarArea = new Rectangle(buttonX, continuarButtonY, buttonWidth, buttonHeight);
+    }
+
+    @Override
+    public void render(float delta) {
+        // Fondo negro
+        ScreenUtils.clear(0, 0, 0, 1);
+
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+
+        // Actualizar hitboxes
+        actualizarBotonHitbox();
+
+        batch.begin();
+
+        // Dibujar la imagen de pausa
+        batch.draw(pausaImagen, (Gdx.graphics.getWidth() - 300) / 2, Gdx.graphics.getHeight() - 150, 300, 100);
+
+        // Dibujar botones con efecto si están seleccionados
+        boolean isOverVolver = manejarBoton(batch, botonVolver, botonVolverArea);
+        boolean isOverContinuar = manejarBoton(batch, botonContinuar, botonContinuarArea);
+
+        // Cambiar el cursor si el ratón está sobre alguno de los botones
+        if (isOverVolver || isOverContinuar) {
+            Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Hand);
+        } else {
+            Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow);
+        }
+
+        batch.end();
+
+        // Lógica de interacción con botones
+        if (Gdx.input.isTouched()) {
+            float touchX = Gdx.input.getX();
+            float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
+
+            if (botonVolverArea.contains(touchX, touchY)) {
+                Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow);
+                game.setScreen(new MainMenuScreen(game));
+                dispose();
+            } else if (botonContinuarArea.contains(touchX, touchY)) {
+                Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow);
+                game.setScreen(juego);
+                dispose();
             }
         }
 
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
+        // Lógica de interacción con teclas
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            game.setScreen(juego); // Continuar el juego al presionar ESC o P
+            dispose();
+        }
+    }
 
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
+    private boolean manejarBoton(SpriteBatch batch, Texture boton, Rectangle area) {
+        float mouseX = Gdx.input.getX();
+        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+        boolean isOverButton = area.contains(mouseX, mouseY);
+        float buttonWidth = area.width;
+        float buttonHeight = area.height;
 
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+        if (isOverButton) {
+            buttonWidth *= 1.1f; // Agrandar un 10%
+            buttonHeight *= 1.1f;
+        }
 
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+        batch.draw(boton,
+                area.x - (buttonWidth - area.width) / 2,
+                area.y - (buttonHeight - area.height) / 2,
+                buttonWidth, buttonHeight);
 
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
+        return isOverButton; // Retorna si el mouse está sobre el botón
+    }
 
+    @Override
+    public void resize(int width, int height) {
+        camera.setToOrtho(false, width, height);
+        actualizarBotonHitbox();
+    }
+
+    @Override
+    public void show() {}
+
+    @Override
+    public void pause() {}
+
+    @Override
+    public void resume() {}
+
+    @Override
+    public void hide() {}
+
+    @Override
+    public void dispose() {
+        pausaImagen.dispose();
+        botonVolver.dispose();
+        botonContinuar.dispose();
+    }
 }
+

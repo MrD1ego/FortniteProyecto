@@ -24,6 +24,12 @@ public class GameLluviaMenu extends Game {
         // Configurar la pantalla inicial
         this.setScreen(new MainMenuScreen(this));
     }
+    
+    public BitmapFont createFont(float scaleX, float scaleY) {
+        BitmapFont font = new BitmapFont(); // Crear nueva fuente
+        font.getData().setScale(scaleX, scaleY); // Configurar la escala de esta instancia
+        return font;
+    }
 
     @Override
     public void render() {

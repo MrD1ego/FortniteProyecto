@@ -24,7 +24,7 @@ public class GameScreen implements Screen {
     public GameScreen(final GameLluviaMenu game) {
         this.game = game;
         this.batch = game.getBatch();
-        this.font = game.getFont();
+        this.font = game.createFont(2, 2);
 
         // Configuración de la cámara
         camera = new OrthographicCamera();
@@ -134,5 +134,7 @@ public class GameScreen implements Screen {
         background.dispose();
         tarro.destruir();
         lluvia.destruir();
+        font.dispose();
+        
     }
 }
