@@ -185,6 +185,7 @@ public class Lluvia {
                 tarro.restaurarTamano();
                 velocidadCaidaActual = 300;
                 intervaloGeneracionActual = intervaloGeneracionOriginal;
+                gotas.clear();
             }
         } else {
             if (TimeUtils.nanoTime() - lastDropTime > intervaloGeneracionActual) {

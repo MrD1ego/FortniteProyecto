@@ -116,7 +116,9 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {}
 
     @Override
-    public void show() {}
+    public void show() {
+        lluvia.continuar();
+    }
 
     @Override
     public void hide() {}
