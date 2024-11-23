@@ -67,7 +67,6 @@ public class GameScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
         
-        
         if (tarro.getPuntos() >= 1000 && !fondoCambiado) {
             fondoCambiado = true;
             background.dispose(); // Liberar el fondo anterior
@@ -92,7 +91,6 @@ public class GameScreen implements Screen {
             dispose();
         }
         
-        
         if (lluvia.isJefeActivo()) {
             int vidaTomate = lluvia.getTomate().getVida();
             font.draw(batch, "Vida: " + vidaTomate, 650, 450); // Posición de texto de vida del jefe
@@ -106,6 +104,11 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             lluvia.pausar();
             game.setScreen(new PausaScreen(game, this));
+        }
+
+        // Activar habilidad durante la pelea con el jefe
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && lluvia.isJefeActivo()) {
+            tarro.activarHabilidad(true);
         }
     }
 

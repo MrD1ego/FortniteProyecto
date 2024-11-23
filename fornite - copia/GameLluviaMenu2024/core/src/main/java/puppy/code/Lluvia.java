@@ -48,7 +48,6 @@ public class Lluvia {
     private boolean jefeActivado = false;
     private int ultimoPuntajeLlama = 0;
     private int proximoPuntajeJefe = 2000;
-    
 
     public Lluvia(Texture gotaBuena, Texture gotaMala, Texture gotaEspecial, Texture gotaBuenaNueva,
                   Texture gotaEspecialNueva, Texture gotaLlama, Texture gotaJetpack, Sound jetpackSound,
@@ -76,7 +75,7 @@ public class Lluvia {
         rainMusic.setLooping(true);
         rainMusic.play();
     }
-    
+
     private void iniciarMusicaJefe() {
         if (rainMusic.isPlaying()) {
             rainMusic.stop(); // Pausar la música de lluvia
@@ -85,7 +84,6 @@ public class Lluvia {
         jefeMusic.play(); // Iniciar la música del jefe
     }
 
-    // Método para finalizar el combate con el jefe
     private void detenerMusicaJefe() {
         if (jefeMusic.isPlaying()) {
             jefeMusic.stop(); // Parar la música del jefe
@@ -104,7 +102,6 @@ public class Lluvia {
     }
 
     public boolean actualizarMovimiento(Tarro tarro) {
-        // Cambio de texturas y generación de gotas llama cada 1000 puntos
         if (tarro.getPuntos() >= 1000 && !texturasCambiadas) {
             gotaBuena.dispose();
             gotaEspecial.dispose();
@@ -126,7 +123,7 @@ public class Lluvia {
             ultimoPuntajeLlama = tarro.getPuntos();
         }
 
-        // Activación del jefe a intervalos de 3000 puntos, empezando desde 2000
+        // Activar el jefe si es necesario
         if (tarro.getPuntos() >= proximoPuntajeJefe && !jefeActivo && !jefeActivado) {
             tomate = new Tomate(tomateTexture);
             tomate.reducirTamano();
@@ -137,62 +134,55 @@ public class Lluvia {
                 }
             }
             jefeActivo = true;
-            jefeActivado = true; // Bloquea futuras activaciones mientras esté activo
+            jefeActivado = true;
             tiempoInicioPatron = TimeUtils.nanoTime();
-            iniciarMusicaJefe(); // Cambia a música de jefe
+            iniciarMusicaJefe();
+
+            tarro.setHabilidad(new DisparoMultiple()); // Asignar habilidad al tarro
         }
 
-        // Comportamiento del jefe
+        // Patrón de disparo del jefe
         if (jefeActivo) {
             tomate.actualizar(Gdx.graphics.getDeltaTime());
             alternarPatronSecuencialmente();
             detectarImpactosConBalas(tarro);
 
-            if (tomate.getVida() <= 0) { // Jefe derrotado
-                jefeActivo = false;
-                jefeActivado = false; // Permite activar el próximo jefe
-                proximoPuntajeJefe += 3000; // Incrementar el puntaje para el próximo jefe
-                detenerMusicaJefe(); // Cambia a la música de lluvia
-                tarro.sumarPuntos(1000); // Bonificación al derrotar al jefe
-
-                // Eliminar gotas malas generadas por el jefe
-                for (int i = gotas.size - 1; i >= 0; i--) {
-                    IGota gota = gotas.get(i);
-                    if (gota instanceof GotaMala) {
-                        gotas.removeIndex(i);
-                    }
-                }
-
-                // Restaurar tamaño y reanudar generación normal de gotas
-                tarro.restaurarTamano();
-                velocidadCaidaActual = 300; // Restablece velocidad a la normal
-                intervaloGeneracionActual = intervaloGeneracionOriginal;
-            }
-
             if (TimeUtils.nanoTime() - tiempoUltimoDisparo > INTERVALO_DISPARO) {
-                tarro.disparar();
+                tarro.disparar(); // Tarro dispara al jefe
                 tiempoUltimoDisparo = TimeUtils.nanoTime();
             }
 
+            // Lógica de patrones
             switch (indicePatron) {
-                case 0:
+                case 0: // Disparos en círculo
                     if (TimeUtils.nanoTime() - tiempoUltimoDisparoCircular > INTERVALO_DISPARO_CIRCULAR) {
                         dispararGotasEnCirculoDesdeTomate();
                         tiempoUltimoDisparoCircular = TimeUtils.nanoTime();
                     }
                     break;
-                case 1:
+                case 1: // Disparos diagonales
                     if (TimeUtils.nanoTime() - tiempoUltimoDisparoDiagonal > INTERVALO_DISPARO_DIAGONAL) {
                         dispararGotasDiagonalesDesdeTomate();
                         tiempoUltimoDisparoDiagonal = TimeUtils.nanoTime();
                     }
                     break;
-                case 2:
+                case 2: // Disparos diagonales antihorario
                     if (TimeUtils.nanoTime() - tiempoUltimoDisparoDiagonal > INTERVALO_DISPARO_DIAGONAL) {
                         dispararGotasDiagonalesAntihorarioDesdeTomate();
                         tiempoUltimoDisparoDiagonal = TimeUtils.nanoTime();
                     }
                     break;
+            }
+
+            if (tomate.getVida() <= 0) { // Jefe derrotado
+                jefeActivo = false;
+                jefeActivado = false;
+                proximoPuntajeJefe += 3000;
+                detenerMusicaJefe();
+                tarro.sumarPuntos(1000);
+                tarro.restaurarTamano();
+                velocidadCaidaActual = 300;
+                intervaloGeneracionActual = intervaloGeneracionOriginal;
             }
         } else {
             if (TimeUtils.nanoTime() - lastDropTime > intervaloGeneracionActual) {
@@ -200,41 +190,29 @@ public class Lluvia {
             }
         }
 
-        // Actualización y detección de colisiones de gotas
-    for (int i = gotas.size - 1; i >= 0; i--) {
-        IGota gota = gotas.get(i);
+        for (int i = gotas.size - 1; i >= 0; i--) {
+            IGota gota = gotas.get(i);
+            if (gota == null) {
+                gotas.removeIndex(i);
+                continue;
+            }
 
-        // Verificar si la gota es null
-        if (gota == null) {
-            gotas.removeIndex(i); // Eliminar gotas nulas
-            continue;
+            if (gota instanceof Gota) {
+                ((Gota) gota).ejecutar(tarro, Gdx.graphics.getDeltaTime(), velocidadCaidaActual);
+            }
+
+            if (gota.getHitbox().y + 64 < 0) {
+                gotas.removeIndex(i);
+                continue;
+            }
+
+            if (gota.getHitbox().overlaps(tarro.getArea())) {
+                gotas.removeIndex(i);
+            }
         }
 
-        // Actualizar posición y procesar efectos a través del Template Method
-        if (gota instanceof Gota) {
-            ((Gota) gota).ejecutar(tarro, Gdx.graphics.getDeltaTime(), velocidadCaidaActual);
-        }
-
-        // Si la gota sale de la pantalla, eliminarla
-        if (gota.getHitbox().y + 64 < 0) {
-            gotas.removeIndex(i);
-            continue;
-        }
-
-        // Si la gota es recogida por el tarro, eliminarla
-        if (gota.getHitbox().overlaps(tarro.getArea())) {
-            gotas.removeIndex(i); // Eliminar la gota de la lista
-        }
+        return tarro.getVidas() > 0;
     }
-
-
-
-    return tarro.getVidas() > 0;
-}
-
-
-
-
 
     public void actualizarDibujoLluvia(SpriteBatch batch) {
         for (IGota gota : gotas) {
@@ -261,7 +239,6 @@ public class Lluvia {
     }
 
     public void pausar() {
-        // Pausa la música que esté en reproducción actualmente
         if (rainMusic.isPlaying()) {
             rainMusic.pause();
         }
@@ -271,11 +248,10 @@ public class Lluvia {
     }
 
     public void continuar() {
-        // Reanuda la música que estaba en reproducción antes de la pausa
         if (jefeActivo && !jefeMusic.isPlaying()) {
-            jefeMusic.play(); // Reanuda la música del jefe si el jefe está activo
+            jefeMusic.play();
         } else if (!jefeActivo && !rainMusic.isPlaying()) {
-            rainMusic.play(); // Reanuda la música de lluvia si el jefe no está activo
+            rainMusic.play();
         }
     }
 
@@ -408,7 +384,7 @@ public class Lluvia {
             anguloEspiralAntihorario = 0;
         }
     }
-    
+
     private void detectarImpactosConBalas(Tarro tarro) {
         for (Bala bala : tarro.getBalas()) {
             if (bala.getHitbox().overlaps(tomate.getHitbox())) {
@@ -425,5 +401,4 @@ public class Lluvia {
     public Tomate getTomate() {
         return tomate;
     }
-
 }

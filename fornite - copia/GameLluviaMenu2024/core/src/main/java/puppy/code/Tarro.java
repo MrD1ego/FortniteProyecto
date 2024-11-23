@@ -35,6 +35,9 @@ public class Tarro {
     private final float anchoOriginal = 64;
     private final float altoOriginal = 64;
 
+    // Atributo para manejar la habilidad
+    private HabilidadStrategy habilidadStrategy;
+
     public Tarro(Texture tex, Sound ss, Texture texturaBala) {
         bucketImage = tex;
         sonidoHerido = ss;
@@ -175,11 +178,30 @@ public class Tarro {
     public void setJefeActivo(boolean jefeActivo) {
         this.jefeActivo = jefeActivo;
     }
-    
-    
+
     public void restaurarTamano() {
         bucket.width = anchoOriginal;
         bucket.height = altoOriginal;
     }
 
+    // Nuevo método: Asignar habilidad
+    public void setHabilidad(HabilidadStrategy habilidad) {
+        this.habilidadStrategy = habilidad;
+    }
+
+    // Nuevo método: Activar habilidad
+    public void activarHabilidad(boolean jefeActivo) {
+        if (jefeActivo && habilidadStrategy != null) {
+            habilidadStrategy.activar(this);
+        }
+    }
+
+    // Nuevo método: Obtener textura de las balas
+    public Texture getTexturaBala() {
+        return texturaBala;
+    }
+
+    public void setVelx(int velocidad) {
+        this.velx = velocidad;
+    }
 }
