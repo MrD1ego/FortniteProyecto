@@ -18,7 +18,7 @@ public class GotaEspecial extends Gota {
 
     @Override
     public void aplicarEfecto(Tarro tarro) {
-        tarro.sumarPuntos(500);
+        tarro.sumarPuntos(50);
         dropSound.play(0.4f);
     }
 
