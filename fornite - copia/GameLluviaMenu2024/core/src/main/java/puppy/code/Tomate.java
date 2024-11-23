@@ -17,7 +17,7 @@ public class Tomate {
     private final float DURACION_CAIDA = 1.0f; // Duración de la caída (1 segundo)
     private int vida; // Vida del jefe
 
-    private static final int VIDA_INICIAL = 20000; // Vida inicial del tomate
+    private static final int VIDA_INICIAL = 2000; // Vida inicial del tomate
 
     public Tomate(Texture tomateTexture) {
         this.tomateTexture = tomateTexture;

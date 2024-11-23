@@ -48,6 +48,7 @@ public class Lluvia {
     private boolean jefeActivado = false;
     private int ultimoPuntajeLlama = 0;
     private int proximoPuntajeJefe = 2000;
+    private IGotaFactory fabrica;
 
     public Lluvia(Texture gotaBuena, Texture gotaMala, Texture gotaEspecial, Texture gotaBuenaNueva,
                   Texture gotaEspecialNueva, Texture gotaLlama, Texture gotaJetpack, Sound jetpackSound,
@@ -67,6 +68,7 @@ public class Lluvia {
         this.tomateTexture = tomateTexture;
         this.tomate = new Tomate(tomateTexture);
         this.jefeMusic = jefeMusic;
+        this.fabrica = new GotaFactoryA();
     }
 
     public void crear() {
@@ -255,7 +257,7 @@ public class Lluvia {
         }
     }
 
-    private void crearGotaDeLluvia() {
+    public void crearGotaDeLluvia() {
         float x = MathUtils.random(0, 800 - 64);
         float y = 480;
 
@@ -263,13 +265,13 @@ public class Lluvia {
         IGota nuevaGota;
 
         if (tipoGota <= 2) {
-            nuevaGota = new GotaJetpack(gotaJetpack, jetpackSound, x, y);
+            nuevaGota = fabrica.crearGotaJetpack(gotaJetpack, jetpackSound, x, y);
         } else if (tipoGota <= 47) {
-            nuevaGota = new GotaBuena(gotaBuena, dropSound, x, y);
+            nuevaGota = fabrica.crearGotaBuena(gotaBuena, dropSound, x, y);
         } else if (tipoGota <= 87) {
-            nuevaGota = new GotaMala(gotaMala, x, y);
+            nuevaGota = fabrica.crearGotaMala(gotaMala, x, y);
         } else {
-            nuevaGota = new GotaEspecial(gotaEspecial, dropSound, x, y);
+            nuevaGota = fabrica.crearGotaEspecial(gotaEspecial, dropSound, x, y);
         }
 
         gotas.add(nuevaGota);
@@ -280,7 +282,7 @@ public class Lluvia {
         float x = MathUtils.random(0, 800 - 64);
         float y = 480;
 
-        IGota nuevaGota = new GotaLlama(gotaLlama, soundLlama, x, y);
+        IGota nuevaGota = fabrica.crearGotaLlama(gotaLlama, soundLlama, x, y);
         gotas.add(nuevaGota);
     }
 
@@ -400,5 +402,10 @@ public class Lluvia {
 
     public Tomate getTomate() {
         return tomate;
+    }
+    
+    
+    public void setFactory(IGotaFactory fabrica) {
+        this.fabrica = fabrica;
     }
 }
