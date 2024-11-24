@@ -24,6 +24,7 @@ public class Tarro {
     private boolean herido = false;
     private int tiempoHeridoMax = 50;
     private int tiempoHerido;
+    private Sound sonidoJetpack;
 
     private boolean jefeActivo = false; // Variable para controlar si el jefe está activo
 
@@ -31,19 +32,21 @@ public class Tarro {
     boolean jetpackActivo = false;
     private float posicionYOriginal;
     private long tiempoInicioJetpack;
-    private final long DURACION_JETPACK = 10000000000L; // 10 segundos en nanosegundos
+    private long duracionJetpack;
     private final float anchoOriginal = 64;
     private final float altoOriginal = 64;
 
     // Atributo para manejar la habilidad
     private HabilidadStrategy habilidadStrategy;
 
-    public Tarro(Texture tex, Sound ss, Texture texturaBala) {
+    public Tarro(Texture tex, Sound ss, Texture texturaBala, Sound sonidoJetpack) {
         bucketImage = tex;
         sonidoHerido = ss;
         this.texturaBala = texturaBala;
         this.balas = new Array<>();
+        this.sonidoJetpack = sonidoJetpack;
     }
+
 
     public int getVidas() {
         return vidas;
@@ -76,6 +79,10 @@ public class Tarro {
         herido = true;
         tiempoHerido = tiempoHeridoMax;
         sonidoHerido.play();
+
+        if (vidas <= 0) {
+            detenerSonidoJetpack(); // Detiene el sonido del jetpack si el tarro muere
+        }
     }
 
     public void dibujar(SpriteBatch batch) {
@@ -107,15 +114,33 @@ public class Tarro {
             jetpackActivo = true;
             posicionYOriginal = this.bucket.y;
             tiempoInicioJetpack = TimeUtils.nanoTime();
+            duracionJetpack = 10000000000L; // Duración predeterminada (10 segundos)
+            sonidoJetpack.play(); // Reproduce el sonido del jetpack
+        }
+    }
+
+    
+    public void reproducirSonidoJetpack() {
+        sonidoJetpack.stop(); // Detiene cualquier reproducción previa
+        sonidoJetpack.play(); // Reproduce el sonido desde el inicio
+    }
+
+
+    public void reiniciarTiempoJetpack(float duracion) {
+        if (jetpackActivo) {
+            tiempoInicioJetpack = TimeUtils.nanoTime(); // Reinicia el inicio del temporizador
+            duracionJetpack = (long) (duracion * 1000000000L); // Actualiza la duración
+        } else {
+            activarJetpack(); // Si no está activo, activa el Jetpack
         }
     }
 
     public void actualizarMovimiento() {
         if (jetpackActivo) {
-            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
                 bucket.y += velx * Gdx.graphics.getDeltaTime();
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
                 bucket.y -= velx * Gdx.graphics.getDeltaTime();
             }
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -125,11 +150,12 @@ public class Tarro {
                 bucket.x += velx * Gdx.graphics.getDeltaTime();
             }
 
-            if (TimeUtils.nanoTime() - tiempoInicioJetpack > DURACION_JETPACK) {
-                jetpackActivo = false;
+            if (TimeUtils.nanoTime() - tiempoInicioJetpack > duracionJetpack) {
+                jetpackActivo = false; // Termina el efecto del Jetpack
                 bucket.y = posicionYOriginal;
             }
         } else {
+            // Movimiento normal sin Jetpack
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
                 bucket.x -= velx * Gdx.graphics.getDeltaTime();
             }
@@ -142,13 +168,6 @@ public class Tarro {
         if (bucket.x > 800 - 64) bucket.x = 800 - 64;
         if (bucket.y < 0) bucket.y = 0;
         if (bucket.y > 480 - 64) bucket.y = 480 - 64;
-
-        for (Bala bala : balas) {
-            bala.actualizarPosicion(Gdx.graphics.getDeltaTime());
-            if (bala.getHitbox().y > 480) {
-                balas.removeValue(bala, true);
-            }
-        }
     }
 
     public void destruir() {
@@ -203,5 +222,12 @@ public class Tarro {
 
     public void setVelx(int velocidad) {
         this.velx = velocidad;
+    }
+    
+    
+    public void detenerSonidoJetpack() {
+        if (sonidoJetpack != null) {
+            sonidoJetpack.stop(); // Detiene cualquier reproducción en curso
+        }
     }
 }

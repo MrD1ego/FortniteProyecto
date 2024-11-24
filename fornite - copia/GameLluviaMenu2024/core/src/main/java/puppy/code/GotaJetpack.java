@@ -20,12 +20,13 @@ public class GotaJetpack extends Gota {
     @Override
     public void aplicarEfecto(Tarro tarro) {
         if (!activada) {
-            soundJetpack.play();
             activada = true;
-            tiempoRestante = tiempoActivacion;
-            tarro.activarJetpack();
+            tarro.activarJetpack(); // Activa el jetpack en el tarro
         }
+        tiempoRestante = tiempoActivacion; // Reinicia el tiempo de la gota
+        tarro.reproducirSonidoJetpack(); // Reinicia el sonido del jetpack
     }
+
 
     public void actualizar(float delta) {
         if (activada) {
@@ -40,3 +41,4 @@ public class GotaJetpack extends Gota {
         return activada;
     }
 }
+

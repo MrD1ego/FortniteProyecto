@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class PausaScreen implements Screen {
 
@@ -17,6 +16,7 @@ public class PausaScreen implements Screen {
     private OrthographicCamera camera;
 
     // Texturas y áreas
+    private Texture fondo;
     private Texture pausaImagen;
     private Texture botonVolver;
     private Texture botonContinuar;
@@ -33,9 +33,10 @@ public class PausaScreen implements Screen {
         this.batch = game.getBatch();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Cargar texturas
+        fondo = new Texture("Fondo.jpg");
         pausaImagen = new Texture("Pausa.png");
         botonVolver = new Texture("Volver.png");
         botonContinuar = new Texture("Continuar.png");
@@ -64,16 +65,13 @@ public class PausaScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Fondo negro
-        ScreenUtils.clear(0, 0, 0, 1);
-
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-        // Actualizar hitboxes
-        actualizarBotonHitbox();
-
         batch.begin();
+
+        // Dibujar fondo ajustado al tamaño de la pantalla
+        batch.draw(fondo, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Dibujar la imagen de pausa
         batch.draw(pausaImagen, (Gdx.graphics.getWidth() - 300) / 2, Gdx.graphics.getHeight() - 150, 300, 100);
@@ -97,11 +95,9 @@ public class PausaScreen implements Screen {
             float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
             if (botonVolverArea.contains(touchX, touchY)) {
-                Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow);
                 game.setScreen(new MainMenuScreen(game));
                 dispose();
             } else if (botonContinuarArea.contains(touchX, touchY)) {
-                Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow);
                 game.setScreen(juego);
                 dispose();
             }
@@ -155,9 +151,9 @@ public class PausaScreen implements Screen {
 
     @Override
     public void dispose() {
+        fondo.dispose();
         pausaImagen.dispose();
         botonVolver.dispose();
         botonContinuar.dispose();
     }
 }
-

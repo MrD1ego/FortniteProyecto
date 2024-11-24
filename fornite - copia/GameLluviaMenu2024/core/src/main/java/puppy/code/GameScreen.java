@@ -34,9 +34,13 @@ public class GameScreen implements Screen {
         
         // Inicialización de elementos del juego
         background = new Texture(Gdx.files.internal("background.png"));
-        tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")), 
-                          Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
-                          new Texture(Gdx.files.internal("Bala.png")));
+        tarro = new Tarro(
+            new Texture(Gdx.files.internal("bucket.png")),
+            Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
+            new Texture(Gdx.files.internal("Bala.png")),
+            Gdx.audio.newSound(Gdx.files.internal("jetpackSound.mp3")) // Cambiar ruta al archivo correcto
+        );
+
         lluvia = new Lluvia(new Texture(Gdx.files.internal("drop.png")),
                             new Texture(Gdx.files.internal("dropBad.png")),
                             new Texture(Gdx.files.internal("specialDrop.png")),
@@ -87,6 +91,7 @@ public class GameScreen implements Screen {
         // Actualizar y dibujar elementos del juego
         tarro.actualizarMovimiento();
         if (!lluvia.actualizarMovimiento(tarro)) {
+            tarro.detenerSonidoJetpack();
             game.setScreen(new GameOverScreen(game));
             dispose();
         }

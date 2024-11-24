@@ -6,21 +6,24 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameOverScreen implements Screen {
+
     private final GameLluviaMenu game;
     private final SpriteBatch batch;
     private OrthographicCamera camera;
 
-    // Texturas y áreas
+    // Texturas
+    private Texture fondo;
     private Texture textoTeBajaron;
     private Texture botonVolver;
     private Texture botonVolverEmpezar;
+
+    // Áreas de botones
     private Rectangle botonVolverArea;
     private Rectangle botonVolverEmpezarArea;
 
-    // Ratios para escalado
+    // Escala de botones
     private static final float BUTTON_WIDTH_RATIO = 0.4f; // 40% del ancho de la pantalla
     private static final float BUTTON_HEIGHT_RATIO = 0.1f; // 10% del alto de la pantalla
 
@@ -29,9 +32,10 @@ public class GameOverScreen implements Screen {
         this.batch = game.getBatch();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // Cargar texturas
+        fondo = new Texture("Fondo.jpg");
         textoTeBajaron = new Texture("TeBajaron.png");
         botonVolver = new Texture("Volver.png");
         botonVolverEmpezar = new Texture("VolverEmpezar.png");
@@ -44,34 +48,30 @@ public class GameOverScreen implements Screen {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
-        // Tamaño y posición del botón "Volver"
+        // Tamaño y posición del botón "Volver al menú"
         float buttonWidth = screenWidth * BUTTON_WIDTH_RATIO;
         float buttonHeight = screenHeight * BUTTON_HEIGHT_RATIO;
         float buttonX = (screenWidth - buttonWidth) / 2;
-        float volverButtonY = screenHeight * 0.3f;
 
+        float volverButtonY = screenHeight * 0.4f;
         botonVolverArea = new Rectangle(buttonX, volverButtonY, buttonWidth, buttonHeight);
 
-        // Tamaño y posición del botón "Volver a Empezar"
-        float volverEmpezarButtonY = screenHeight * 0.15f;
-
+        // Tamaño y posición del botón "Volver a empezar"
+        float volverEmpezarButtonY = screenHeight * 0.2f;
         botonVolverEmpezarArea = new Rectangle(buttonX, volverEmpezarButtonY, buttonWidth, buttonHeight);
     }
 
     @Override
     public void render(float delta) {
-        // Fondo negro
-        ScreenUtils.clear(0, 0, 0, 1);
-
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-        // Actualizar hitboxes
-        actualizarBotonHitbox();
-
         batch.begin();
 
-        // Dibujar el texto "Te Bajaron"
+        // Dibujar fondo ajustado al tamaño de la pantalla
+        batch.draw(fondo, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // Dibujar el texto "Te Bajaron" centrado en la parte superior
         batch.draw(textoTeBajaron, (Gdx.graphics.getWidth() - 300) / 2, Gdx.graphics.getHeight() - 150, 300, 100);
 
         // Dibujar botones con efecto si están seleccionados
@@ -93,11 +93,11 @@ public class GameOverScreen implements Screen {
             float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
             if (botonVolverArea.contains(touchX, touchY)) {
-                Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow);
+                Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow); // Cambiar a cursor normal
                 game.setScreen(new MainMenuScreen(game));
                 dispose();
             } else if (botonVolverEmpezarArea.contains(touchX, touchY)) {
-                Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow);
+                Gdx.graphics.setSystemCursor(com.badlogic.gdx.graphics.Cursor.SystemCursor.Arrow); // Cambiar a cursor normal
                 game.setScreen(new GameScreen(game));
                 dispose();
             }
@@ -145,6 +145,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void dispose() {
+        fondo.dispose();
         textoTeBajaron.dispose();
         botonVolver.dispose();
         botonVolverEmpezar.dispose();
